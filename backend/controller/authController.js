@@ -1,7 +1,7 @@
 const authService = require('../service/authService');
 
 class AuthController {
-    async register(req, res) {
+    async register(req, res, next) {
         try {
             const { username, email, password } = req.body;
             const response = await authService.register(username, email, password);
@@ -30,7 +30,7 @@ class AuthController {
     async registerAdmin(req, res, next) {
         try {
             const { username, email, password } = req.body;
-            const response = await authService.registerAdmin(username, email, password);
+            const response = await authService.createAdminUser(username, email, password);
             res.status(201).json({
                 message: 'Admin user registered successfully',
                 data: response
@@ -70,7 +70,36 @@ class AuthController {
             next(error);
         }
     }
+    async deleteUser(req, res, next) {
+        try {
+            const userId = req.params.id;
+            const response = await authService.deleteUser(userId);
+            res.status(200).json(response);
+        } catch (error) {
+            next(error);
+        }
+    }
 
+    async updateUser(req, res, next) {
+        try {
+            const userId = req.params.id;
+            const updateData = req.body;
+            const response = await authService.updateUser(userId, updateData);
+            res.status(200).json({
+                message: 'User updated successfully',
+                data: response
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+    async testAdminEndpoint(req, res, next) {
+        try {
+            res.status(200).json({ message: 'Admin endpoint accessed successfully' });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new AuthController();

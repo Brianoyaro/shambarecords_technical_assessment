@@ -7,6 +7,7 @@ const UserEnum = require('../enums/userEnum');
 class AuthService {
     async register(username, email, password) {
         // Check if user already exists
+        console.log(`Received registration request: username=${username}, email=${email}`);
         const existingUser = await userRepository.findByEmail(email);
         if (existingUser) {
             throw new AppError('Email is already registered', 400);
@@ -21,16 +22,14 @@ class AuthService {
             username,
             email,
             passwordHash,
-            role: UserEnum.ROLES.USER, // Default role
+            role: UserEnum.ROLE.USER, // Default role
             status: UserEnum.STATUS.ACTIVE, // Default status
         });
 
         return {
             id: newUser.id,
             username: newUser.username,
-            email: newUser.email,
-            role: newUser.role,
-            status: newUser.status
+            email: newUser.email
         };
     }
 
@@ -59,9 +58,7 @@ class AuthService {
             user: {
                 id: user.id,
                 username: user.username,
-                email: user.email,
-                role: user.role,
-                status: user.status
+                email: user.email
             }
         };
     }
@@ -82,7 +79,7 @@ class AuthService {
             username,
             email,
             passwordHash,
-            role: UserEnum.ROLES.ADMIN, // Admin role
+            role: UserEnum.ROLE.ADMIN, // Admin role
             status: UserEnum.STATUS.ACTIVE, // Default status
         });
         
