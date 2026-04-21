@@ -8,18 +8,18 @@ const generateToken = (id, role) => {
 const validateToken = (token) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return { valid: true, decoded };
+        return decoded;
     } catch (error) {
-        return { valid: false, error };
+        return null;
     }
 }
 // decode token
 const decodeToken = (token) => {
     try {
         const decoded = jwt.decode(token);
-        return { valid: true, decoded };
+        return decoded;
     } catch (error) {
-        return { valid: false, error };
+        return null;
     }
 }
 

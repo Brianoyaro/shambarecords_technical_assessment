@@ -38,5 +38,9 @@ app.get('/health', (req, res) => {
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+// user management routes
+const userManagementRoutes = require('./routes/userManagement');
+app.use('/api/admin', userManagementRoutes);
+
 
 module.exports = app;
