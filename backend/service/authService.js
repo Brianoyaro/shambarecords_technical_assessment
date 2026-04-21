@@ -104,6 +104,16 @@ class AuthService {
         await userRepository.update(userId, { status: UserEnum.STATUS.INACTIVE });
         return { message: 'User deactivated successfully' };
     }
+
+    async activateUser(userId) {
+        const user = await userRepository.findById(userId);
+        if (!user) {
+            throw new AppError('User not found', 404);
+        }
+
+        await userRepository.update(userId, { status: UserEnum.STATUS.ACTIVE });
+        return { message: 'User activated successfully' };
+    }
 }
 
 module.exports = new AuthService();
