@@ -114,6 +114,18 @@ class AuthService {
         await userRepository.update(userId, { status: UserEnum.STATUS.ACTIVE });
         return { message: 'User activated successfully' };
     }
+
+    async getAllUsers() {
+        const users = await userRepository.findAll();
+        return users.map(user => ({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            status: user.status
+        }));
+    }
+
 }
 
 module.exports = new AuthService();

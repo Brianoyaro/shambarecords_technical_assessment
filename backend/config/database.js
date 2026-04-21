@@ -1,4 +1,4 @@
-const { Sequalize } = require('./sequelize');
+const { Sequalize } = require('sequelize');
 require('dotenv').config(); // Load environment variables from .env file
 
 const sequelize = new Sequelize(
