@@ -1,4 +1,4 @@
-const User = require('../entity/user');
+const User = require('../models/user');
 
 class UserRepository {
     async create(userData) {

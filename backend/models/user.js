@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('./index').sequelize; // Import the Sequelize instance
+// const sequelize = require('../config/database');
 const USER_ENUM = require('../enums/userEnum');
 
 const User = sequelize.define('User', {
