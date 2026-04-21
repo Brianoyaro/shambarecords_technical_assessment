@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const USERENUM = require('../enums/userRoleEnum');
+const USER_ENUM = require('../enums/userEnum');
 
 const User = sequelize.define('User', {
     id: {
@@ -25,14 +25,14 @@ const User = sequelize.define('User', {
         allowNull: false,
     },
     role: {
-        type: DataTypes.ENUM(...Object.values(USERENUM.ROLE)),
+        type: DataTypes.ENUM(...Object.values(USER_ENUM.ROLE)),
         allowNull: false,
-        defaultValue: USERENUM.ROLE.USER, // Default role is 'user'
+        defaultValue: USER_ENUM.ROLE.USER, // Default role is 'user'
     },
     status: {
-        type: DataTypes.ENUM(...Object.values(USERENUM.STATUS)),
+        type: DataTypes.ENUM(...Object.values(USER_ENUM.STATUS)),
         allowNull: false,
-        defaultValue: USERENUM.STATUS.ACTIVE, // Default status is 'active'
+        defaultValue: USER_ENUM.STATUS.ACTIVE, // Default status is 'active'
     },
     createdAt: {
         type: DataTypes.DATE,
