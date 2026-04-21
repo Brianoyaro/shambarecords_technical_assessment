@@ -42,5 +42,9 @@ app.use('/api/auth', authRoutes);
 const userManagementRoutes = require('./routes/userManagement');
 app.use('/api/admin', userManagementRoutes);
 
+// field routes
+const fieldRoutes = require('./routes/field');
+app.use('/api/fields', fieldRoutes);
+
 
 module.exports = app;

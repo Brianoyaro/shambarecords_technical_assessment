@@ -1,39 +1,41 @@
 const { DataTypes } = require('sequelize');
-// const sequelize = require('./index').sequelize; // Import the Sequelize instance
 const sequelize = require('../config/database');
-const USER_ENUM = require('../enums/userEnum');
 
-const User = sequelize.define('User', {
+const FieldStagesEnum = require('../enums/fieldStagesEnum');
+
+const Field = sequelize.define('Field', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    username: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    email: {
+    cropType: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true,
+    },
+    plantingDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    currentStage: {
+        type: DataTypes.ENUM(...Object.values(FieldStagesEnum.STAGE)),
+        allowNull: false,
+        defaultValue: FieldStagesEnum.STAGE.PLANTED, // Default stage is 'planted'
+    },
+    // relationship with the user
+    assignedAgentId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'users', // name of the target table
+            key: 'id', // key in the target table that we're referencing
         },
-    },
-    passwordHash: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    role: {
-        type: DataTypes.ENUM(...Object.values(USER_ENUM.ROLE)),
-        allowNull: false,
-        defaultValue: USER_ENUM.ROLE.USER, // Default role is 'user'
-    },
-    status: {
-        type: DataTypes.ENUM(...Object.values(USER_ENUM.STATUS)),
-        allowNull: false,
-        defaultValue: USER_ENUM.STATUS.ACTIVE, // Default status is 'active'
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -47,7 +49,7 @@ const User = sequelize.define('User', {
     },
 }, {
     timestamps: true, // Automatically add createdAt and updatedAt fields
-    tableName: 'users',
+    tableName: 'fields',
 });
 
-module.exports = User;
+module.exports = Field;
