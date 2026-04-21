@@ -112,6 +112,16 @@ class AuthService {
         return { message: 'User activated successfully' };
     }
 
+    async deleteUser(userId) {
+        const user = await userRepository.findById(userId);
+        if (!user) {
+            throw new AppError('User not found', 404);
+        }
+
+        await userRepository.delete(userId);
+        return { message: 'User deleted successfully' };
+    }
+
     async getAllUsers() {
         const users = await userRepository.findAll();
         return users.map(user => ({
