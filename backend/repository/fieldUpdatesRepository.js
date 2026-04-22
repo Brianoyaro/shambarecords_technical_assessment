@@ -10,8 +10,9 @@ class FieldUpdatesRepository {
         return await FieldUpdate.findAll({ where: { fieldId } });
     }
 
-    async findAll() {
-        return await FieldUpdate.findAll();
+    async findAll(agentId) {
+        const whereClause = agentId ? { agentId } : {};
+        return await FieldUpdate.findAll({ where: whereClause });
     }
 
     async update(id, updateData) {

@@ -22,8 +22,8 @@ class FieldUpdatesService {
         return updates;
     }
 
-    async getAllFieldUpdates() {
-        const updates = await fieldUpdatesRepository.findAll();
+    async getAllFieldUpdates(agentId) {
+        const updates = await fieldUpdatesRepository.findAll(agentId);
         return updates;
     }
 

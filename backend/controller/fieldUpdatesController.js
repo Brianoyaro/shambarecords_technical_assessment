@@ -32,7 +32,8 @@ class FieldUpdatesController {
     // ADMIN
     async getAllFieldUpdates(req, res, next) {
         try {
-            const response = await fieldUpdatesService.getAllFieldUpdates();
+            const { fieldAgentId } = req.query; // Optional filter by agent ID
+            const response = await fieldUpdatesService.getAllFieldUpdates(fieldAgentId);
             res.status(200).json({
                 message: 'All field updates retrieved successfully',
                 data: response
