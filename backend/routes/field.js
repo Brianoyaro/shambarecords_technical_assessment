@@ -13,8 +13,16 @@ router.put('/:id', authorize(UserEnum.ROLE.ADMIN), (req, res, next) => fieldCont
 router.delete('/:id', authorize(UserEnum.ROLE.ADMIN), (req, res, next) => fieldController.deleteField(req, res, next));
 
 // Agent endpoints
-router.get('/agent', authorize(UserEnum.ROLE.USER), (req, res, next) => fieldController.getFieldsByAgentId(req, res, next));
+router.get('/me', authorize(UserEnum.ROLE.USER), (req, res, next) => fieldController.getFieldsByAgentId(req, res, next));
 router.get('/:id', authorize(UserEnum.ROLE.ADMIN, UserEnum.ROLE.USER), (req, res, next) => fieldController.getFieldById(req, res, next));
 
+
+// field_updates routes
+const fieldUpdatesController = require('../controller/fieldUpdatesController');
+router.post('/:fieldId/updates', authorize(UserEnum.ROLE.USER), (req, res, next) => fieldUpdatesController.createFieldUpdate(req, res, next));
+router.get('/:fieldId/updates', authorize(UserEnum.ROLE.ADMIN, UserEnum.ROLE.USER), (req, res, next) => fieldUpdatesController.getFieldUpdates(req, res, next));
+router.get('/updates', authorize(UserEnum.ROLE.ADMIN), (req, res, next) => fieldUpdatesController.getAllFieldUpdates(req, res, next));
+router.put('/updates/:id', authorize(UserEnum.ROLE.USER), (req, res, next) => fieldUpdatesController.updateFieldUpdate(req, res, next));
+router.delete('/updates/:id', authorize(UserEnum.ROLE.ADMIN), (req, res, next) => fieldUpdatesController.deleteFieldUpdate(req, res, next));
 
 module.exports = router;
