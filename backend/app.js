@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+// load environment variables from .env file
+require('dotenv').config();
 
 
 const app = express();
