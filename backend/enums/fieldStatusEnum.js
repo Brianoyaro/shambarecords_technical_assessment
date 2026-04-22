@@ -1,7 +1,8 @@
 const FIELDSTATUSENUM = {
     STATUS: {
         ACTIVE: 'active',
-        INACTIVE: 'inactive',
+        AT_RISK: 'at_risk',
+        COMPLETED: 'completed',
     },
 };
 
