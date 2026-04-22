@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError');
 const { fieldRepository } = require('../repository/fieldRepository');
 const UserEnum = require('../enums/userEnum');
+const fieldStausCalculator = require('./fieldStatusCalculator');
 
 class FieldService {
     async createField(name, plantingDate, cropType, assignedAgentId) {
@@ -16,17 +17,31 @@ class FieldService {
             assignedAgentId
         });
 
-        return newField;
+        return { newField, ...fieldStausCalculator.calculateFieldStatus(newField) };
     }
 
     async getAllFields() {
         // Admins only
-        return await fieldRepository.findAll();
+        const fields = await fieldRepository.findAll();
+        return fields.map(field => ({ field, ...fieldStausCalculator.calculateFieldStatus(field) })); // Calculate status based on planting date
     }
 
     async getFieldsByAgentId(agentId) {
         // Retrieve all fields assigned to a specific agent
-        return await fieldRepository.findByAgentId(agentId);
+        const fields = await fieldRepository.findByAgentId(agentId);
+        return fields.map(field => ({ field, ...fieldStausCalculator.calculateFieldStatus(field) }));
+    }
+
+    async getFieldsByAgentId(agentId) {
+        // Retrieve all fields assigned to a specific agent
+        const fields = await fieldRepository.findByAgentId(agentId);
+        return fields.map(field => ({ field, ...fieldStausCalculator.calculateFieldStatus(field) }));
+    }
+
+    async getFieldsByAgentId(agentId) {
+        // Retrieve all fields assigned to a specific agent
+        const fields = await fieldRepository.findByAgentId(agentId);
+        return fields.map(field => ({ field, ...fieldStausCalculator.calculateFieldStatus(field) }));
     }
 
     async getFieldById(fieldId, userId, userRole) {
@@ -41,7 +56,7 @@ class FieldService {
             throw new AppError('Access denied. Insufficient permissions', 403);
         }
 
-        return field;
+        return { field, ...fieldStausCalculator.calculateFieldStatus(field) }; // Calculate status based on planting date
     }
 
     async updateField(fieldId, updateData) {
@@ -52,7 +67,10 @@ class FieldService {
         }
         try {
             const updatedField = await fieldRepository.update(fieldId, updateData);
-            return updatedField;
+            return { 
+                updatedField,
+                ...fieldStausCalculator.calculateFieldStatus(updatedField) // Recalculate status based on planting date
+            };
         } catch (error) {
             throw new AppError('Failed to update field', 500);
         }
