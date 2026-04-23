@@ -43,7 +43,7 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-blue-800">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 text-center">Shamba Records</h1>
@@ -60,7 +60,7 @@ export function LoginPage() {
               {...register('email')}
               type="email"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="admin1@email.com"
+              placeholder="you@example.com"
             />
             {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
           </div>
@@ -99,11 +99,11 @@ export function LoginPage() {
           </p>
         </div>
 
-        <div className="mt-6 p-4 bg-gray-100 rounded-md text-sm text-gray-600">
+        {/* <div className="mt-6 p-4 bg-gray-100 rounded-md text-sm text-gray-600">
           <p className="font-semibold mb-2">Demo Credentials:</p>
           <p>Admin: admin1@email.com</p>
           <p>Agent: user@email.com</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,0 +1,23 @@
+Find inspiration and remove the sidebar
+
+improve mobile responsiveness
+
+Add these columns to field [location, size]
+
+improve the status calculator
+
+add code documentation.
+
+paginate fields table
+
+add filter by: agentName, location, size
+
+
+******************************************************************************************
+add tests
+
+Add the README file
+
+Deploy the application
+
+Apply for the internship

@@ -56,7 +56,7 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-600 to-blue-800">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 text-center">Shamba Records</h1>
