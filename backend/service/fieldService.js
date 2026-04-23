@@ -1,7 +1,7 @@
 const AppError = require('../utils/appError');
-const { fieldRepository } = require('../repository/fieldRepository');
+const fieldRepository = require('../repository/fieldRepository');
 const UserEnum = require('../enums/userEnum');
-const fieldStausCalculator = require('./fieldStatusCalculator');
+const fieldStatusCalculator = require('./fieldStatusCalculator');
 
 class FieldService {
     async createField(name, plantingDate, cropType, assignedAgentId) {
@@ -17,31 +17,19 @@ class FieldService {
             assignedAgentId
         });
 
-        return { newField, ...fieldStausCalculator.calculateFieldStatus(newField) };
+        return { newField, ...fieldStatusCalculator.calculateFieldStatus(newField) };
     }
 
     async getAllFields() {
         // Admins only
         const fields = await fieldRepository.findAll();
-        return fields.map(field => ({ field, ...fieldStausCalculator.calculateFieldStatus(field) })); // Calculate status based on planting date
+        return fields.map(field => ({ field, ...fieldStatusCalculator.calculateFieldStatus(field) })); // Calculate status based on planting date
     }
 
     async getFieldsByAgentId(agentId) {
         // Retrieve all fields assigned to a specific agent
         const fields = await fieldRepository.findByAgentId(agentId);
-        return fields.map(field => ({ field, ...fieldStausCalculator.calculateFieldStatus(field) }));
-    }
-
-    async getFieldsByAgentId(agentId) {
-        // Retrieve all fields assigned to a specific agent
-        const fields = await fieldRepository.findByAgentId(agentId);
-        return fields.map(field => ({ field, ...fieldStausCalculator.calculateFieldStatus(field) }));
-    }
-
-    async getFieldsByAgentId(agentId) {
-        // Retrieve all fields assigned to a specific agent
-        const fields = await fieldRepository.findByAgentId(agentId);
-        return fields.map(field => ({ field, ...fieldStausCalculator.calculateFieldStatus(field) }));
+        return fields.map(field => ({ field, ...fieldStatusCalculator.calculateFieldStatus(field) }));
     }
 
     async getFieldById(fieldId, userId, userRole) {
@@ -56,7 +44,7 @@ class FieldService {
             throw new AppError('Access denied. Insufficient permissions', 403);
         }
 
-        return { field, ...fieldStausCalculator.calculateFieldStatus(field) }; // Calculate status based on planting date
+        return { field, ...fieldStatusCalculator.calculateFieldStatus(field) }; // Calculate status based on planting date
     }
 
     async updateField(fieldId, updateData) {
@@ -69,7 +57,7 @@ class FieldService {
             const updatedField = await fieldRepository.update(fieldId, updateData);
             return { 
                 updatedField,
-                ...fieldStausCalculator.calculateFieldStatus(updatedField) // Recalculate status based on planting date
+                ...fieldStatusCalculator.calculateFieldStatus(updatedField) // Recalculate status based on planting date
             };
         } catch (error) {
             throw new AppError('Failed to update field', 500);

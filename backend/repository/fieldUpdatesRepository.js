@@ -1,4 +1,5 @@
 const FieldUpdate = require('../models/fieldUpdate');
+const User = require('../models/user');
 const AppError = require('../utils/appError');
 
 class FieldUpdatesRepository {
@@ -7,12 +8,24 @@ class FieldUpdatesRepository {
     }
 
     async findByFieldId(fieldId) {
-        return await FieldUpdate.findAll({ where: { fieldId } });
+        return await FieldUpdate.findAll({ 
+            where: { fieldId },
+            include: [{ model: User, as: 'agent', attributes: ['id', 'username', 'email'] }]
+        });
+    }
+
+    async findById(id) {
+        return await FieldUpdate.findByPk(id, {
+            include: [{ model: User, as: 'agent', attributes: ['id', 'username', 'email'] }]
+        });
     }
 
     async findAll(agentId) {
         const whereClause = agentId ? { agentId } : {};
-        return await FieldUpdate.findAll({ where: whereClause });
+        return await FieldUpdate.findAll({ 
+            where: whereClause,
+            include: [{ model: User, as: 'agent', attributes: ['id', 'username', 'email'] }]
+        });
     }
 
     async update(id, updateData) {
@@ -31,5 +44,6 @@ class FieldUpdatesRepository {
         await update.destroy();
     }
 }
+
 
 module.exports = new FieldUpdatesRepository();

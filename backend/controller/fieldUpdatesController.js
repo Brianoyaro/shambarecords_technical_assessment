@@ -1,4 +1,4 @@
-const { fieldUpdatesService } = require('../service/fieldUpdatesService');
+const fieldUpdatesService = require('../service/fieldUpdatesService');
 
 class FieldUpdatesController {
     async createFieldUpdate(req, res, next) {
@@ -42,13 +42,14 @@ class FieldUpdatesController {
             next(error);
         }
     }
-    // update
+    // update (only author can update)
     async updateFieldUpdate(req, res, next) {
         try {
             const { id } = req.params;
             const { notes, fieldStage } = req.body;
+            const userId = req.user.id;
 
-            const response = await fieldUpdatesService.updateFieldUpdate(id, notes, fieldStage);
+            const response = await fieldUpdatesService.updateFieldUpdate(id, userId, notes, fieldStage);
             res.status(200).json({
                 message: 'Field update updated successfully',
                 data: response
@@ -57,12 +58,13 @@ class FieldUpdatesController {
             next(error);
         }
     }
-    // delete an update
+    // delete an update (only author can delete)
     async deleteFieldUpdate(req, res, next) {
         try {
             const { id } = req.params;
+            const userId = req.user.id;
 
-            await fieldUpdatesService.deleteFieldUpdate(id);
+            await fieldUpdatesService.deleteFieldUpdate(id, userId);
             res.status(200).json({
                 message: 'Field update deleted successfully',
             });

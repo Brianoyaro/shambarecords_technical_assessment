@@ -29,7 +29,9 @@ class AuthService {
         return {
             id: newUser.id,
             username: newUser.username,
-            email: newUser.email
+            email: newUser.email,
+            role: newUser.role,
+            status: newUser.status
         };
     }
 
@@ -58,7 +60,9 @@ class AuthService {
             user: {
                 id: user.id,
                 username: user.username,
-                email: user.email
+                email: user.email,
+                role: user.role,
+                status: user.status
             }
         };
     }

@@ -1,5 +1,6 @@
 const User = require('../models/user');
-const { fieldService } = require('../service/fieldService');
+const fieldService = require('../service/fieldService');
+const  UserEnum  = require('../enums/userEnum');
 
 class FieldController {
     async createField(req, res, next) {
@@ -21,7 +22,7 @@ class FieldController {
         try {
             // const user_role = req.user.role;
             let response;
-            if (req.user.role === User.ROLE.ADMIN) {
+            if (req.user.role === UserEnum.ROLE.ADMIN) {
                 // Admin can see all fields, agents can only see their assigned fields
                 response = await fieldService.getAllFields();
             } else {
@@ -72,6 +73,20 @@ class FieldController {
             const response = await fieldService.deleteField(fieldId);
             res.status(200).json({
                 message: 'Field deleted successfully',
+                data: response
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getFieldsByAgentId(req, res, next) {
+        // Agent endpoint - get fields assigned to current user
+        try {
+            const agentId = req.user.id;
+            const response = await fieldService.getFieldsByAgentId(agentId);
+            res.status(200).json({
+                message: 'Agent fields retrieved successfully',
                 data: response
             });
         } catch (error) {
