@@ -1,4 +1,5 @@
 const fieldUpdatesRepository = require('../repository/fieldUpdatesRepository');
+const fieldRepository = require('../repository/fieldRepository');
 const AppError = require('../utils/appError');
 const FieldStageEnum = require('../enums/fieldStagesEnum');
 
@@ -8,12 +9,25 @@ class FieldUpdatesService {
             throw new AppError('Invalid field stage', 400);
         }
         
+        // Verify the field exists
+        const field = await fieldRepository.findById(fieldId);
+        if (!field) {
+            throw new AppError('Field not found', 404);
+        }
+        
+        console.log('Creating field update:', { fieldId, agentId, fieldStage, notes });
+        
         const newUpdate = await fieldUpdatesRepository.create({
             fieldId,
             agentId,
             notes,
             fieldStage
         });
+        
+        // Update the field's currentStage to match the update's fieldStage
+        console.log('Updating field currentStage to:', fieldStage);
+        await fieldRepository.update(fieldId, { currentStage: fieldStage });
+        
         return newUpdate;
     }
 
@@ -42,7 +56,16 @@ class FieldUpdatesService {
             throw new AppError('Only the author can edit this update', 403);
         }
         
+        console.log('Updating field update:', { id, fieldStage, notes });
+        
         const updatedUpdate = await fieldUpdatesRepository.update(id, { notes, fieldStage });
+        
+        // If the fieldStage was changed, update the field's currentStage as well
+        if (existingUpdate.fieldStage !== fieldStage) {
+            console.log('Field stage changed from', existingUpdate.fieldStage, 'to', fieldStage, 'updating field');
+            await fieldRepository.update(existingUpdate.fieldId, { currentStage: fieldStage });
+        }
+        
         return updatedUpdate;
     }
 
