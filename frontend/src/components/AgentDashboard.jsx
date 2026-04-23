@@ -123,6 +123,9 @@ export function AgentDashboard() {
                 Stage
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
                 Action
               </th>
             </tr>
@@ -130,7 +133,7 @@ export function AgentDashboard() {
           <tbody className="divide-y divide-gray-200">
             {fields.length === 0 ? (
               <tr>
-                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
                   No fields assigned to you yet
                 </td>
               </tr>
@@ -156,6 +159,19 @@ export function AgentDashboard() {
                       }`}
                     >
                       {fieldData.field.currentStage}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        fieldData.status === 'active'
+                          ? 'bg-blue-100 text-blue-800'
+                          : fieldData.status === 'at_risk'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {fieldData.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm">
