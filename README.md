@@ -141,7 +141,7 @@ Shamba Records is a farm field management system designed to help agricultural o
    ```bash
    npm run dev
    ```
-   Application runs on `http://localhost:5173`
+   Application runs on `http://localhost:9001`
 
 5. **Build for production**:
    ```bash
