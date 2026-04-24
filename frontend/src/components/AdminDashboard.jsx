@@ -251,6 +251,7 @@ export function AdminDashboard() {
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow p-3 sm:p-6 mb-6 sm:mb-8">
+        {/* Mobile Filter Header with Toggle */}
         <button
           onClick={() => setShowFilters(!showFilters)}
           className="flex justify-between items-center w-full sm:hidden mb-4"
@@ -259,6 +260,7 @@ export function AdminDashboard() {
           <FiChevronDown className={`w-5 h-5 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
         </button>
 
+        {/* Desktop Filter Header (always visible on desktop) */}
         <div className="hidden sm:flex sm:justify-between sm:items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
           {Object.values(filters).some((val) => val !== '') && (
@@ -272,21 +274,24 @@ export function AdminDashboard() {
           )}
         </div>
 
+        {/* Mobile Filter Inputs (collapsible) */}
         {showFilters && (
-          <>
-            <div className="sm:hidden mb-4 flex justify-end">
-              {Object.values(filters).some((val) => val !== '') && (
-                <button
-                  onClick={clearFilters}
-                  className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800 font-medium"
-                >
-                  <FiX className="w-4 h-4" />
-                  Clear Filters
-                </button>
-              )}
-            </div>
+          <div className="sm:hidden mb-4 flex justify-end">
+            {Object.values(filters).some((val) => val !== '') && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800 font-medium"
+              >
+                <FiX className="w-4 h-4" />
+                Clear Filters
+              </button>
+            )}
+          </div>
+        )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
+        {/* Filter Grid - Always visible on desktop, collapsible on mobile */}
+        {(showFilters || window.innerWidth >= 640) && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
               {/* Agent Name Filter - Admin only (Dropdown) */}
               <div>
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
@@ -385,7 +390,6 @@ export function AdminDashboard() {
                 </select>
               </div>
             </div>
-          </>
         )}
       </div>
 
