@@ -3,17 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { fieldService } from '../services/fieldService';
 import { userService } from '../services/userService';
-import { FiHardDrive, FiLoader, FiAlertCircle, FiPlus, FiEdit, FiTrash2, FiGrid, FiList } from 'react-icons/fi';
+import { FiHardDrive, FiLoader, FiAlertCircle, FiPlus, FiEdit, FiTrash2, FiGrid, FiList, FiX } from 'react-icons/fi';
 
 export function AdminDashboard() {
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
+  const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewType, setViewType] = useState('table'); // 'table' or 'card'
   const [currentPage, setCurrentPage] = useState(1);
-  // const ITEMS_PER_PAGE = 2;
-  const ITEMS_PER_PAGE = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE) || 10; // Default to 10 if not set
+  const ITEMS_PER_PAGE = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE) || 10;
+  const [filters, setFilters] = useState({
+    agentName: '',
+    location: '',
+    minSize: '',
+    maxSize: '',
+    stage: '',
+    status: '',
+  });
 
   useEffect(() => {
     fetchFields();
@@ -23,9 +31,15 @@ export function AdminDashboard() {
     try {
       setLoading(true);
       setError(null);
-      const response = await fieldService.getFields();
-      console.log('Fetched fields:', response.data);
-      setFields(response.data || []);
+      const [fieldsRes, agentsRes] = await Promise.all([
+        fieldService.getFields(),
+        userService.getAllUsers(),
+      ]);
+      console.log('Fetched fields:', fieldsRes.data);
+      setFields(fieldsRes.data || []);
+      // Filter for agents (non-admin users)
+      const agentsList = agentsRes.data?.filter((u) => u.role !== 'admin') || [];
+      setAgents(agentsList);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch fields');
     } finally {
@@ -55,9 +69,45 @@ export function AdminDashboard() {
     harvested: fields.filter((f) => f.field?.currentStage === 'harvested').length,
   };
 
+  // Apply filters
+  const filteredFields = fields.filter((fieldData) => {
+    const field = fieldData.field;
+    
+    // Agent name filter (case-insensitive)
+    if (filters.agentName && field.assignedAgent?.id !== parseInt(filters.agentName)) {
+      return false;
+    }
+    
+    // Location filter (case-insensitive)
+    if (filters.location && !field.location?.toLowerCase().includes(filters.location.toLowerCase())) {
+      return false;
+    }
+    
+    // Size filter (range)
+    const size = parseFloat(field.size);
+    if (filters.minSize && size < parseFloat(filters.minSize)) {
+      return false;
+    }
+    if (filters.maxSize && size > parseFloat(filters.maxSize)) {
+      return false;
+    }
+    
+    // Stage filter
+    if (filters.stage && field.currentStage !== filters.stage) {
+      return false;
+    }
+    
+    // Status filter
+    if (filters.status && fieldData.status !== filters.status) {
+      return false;
+    }
+    
+    return true;
+  });
+
   // Pagination logic
-  const totalPages = Math.ceil(fields.length / ITEMS_PER_PAGE);
-  const paginatedFields = fields.slice(
+  const totalPages = Math.ceil(filteredFields.length / ITEMS_PER_PAGE);
+  const paginatedFields = filteredFields.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -65,6 +115,28 @@ export function AdminDashboard() {
   // Reset to page 1 when fields or view changes
   const handleViewChange = (view) => {
     setViewType(view);
+    setCurrentPage(1);
+  };
+
+  // Handle filter change
+  const handleFilterChange = (filterName, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterName]: value,
+    }));
+    setCurrentPage(1); // Reset to page 1 when filters change
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setFilters({
+      agentName: '',
+      location: '',
+      minSize: '',
+      maxSize: '',
+      stage: '',
+      status: '',
+    });
     setCurrentPage(1);
   };
 
@@ -171,6 +243,122 @@ export function AdminDashboard() {
           <div>
             <p className="text-gray-600 text-sm font-medium">Harvested</p>
             <p className="text-3xl font-bold text-purple-600">{statusBreakdown.harvested}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+          {Object.values(filters).some((val) => val !== '') && (
+            <button
+              onClick={clearFilters}
+              className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800 font-medium"
+            >
+              <FiX className="w-4 h-4" />
+              Clear Filters
+            </button>
+          )}
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+          {/* Agent Name Filter - Admin only (Dropdown) */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Agent
+            </label>
+            <select
+              value={filters.agentName}
+              onChange={(e) => handleFilterChange('agentName', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">All Agents</option>
+              {agents.map((agent) => (
+                <option key={agent.id} value={agent.id}>
+                  {agent.username}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Location Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Location
+            </label>
+            <input
+              type="text"
+              placeholder="Search location..."
+              value={filters.location}
+              onChange={(e) => handleFilterChange('location', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* Size Filter - Min */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Min Size (acres)
+            </label>
+            <input
+              type="number"
+              placeholder="Min"
+              value={filters.minSize}
+              onChange={(e) => handleFilterChange('minSize', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+
+          {/* Size Filter - Max */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Max Size (acres)
+            </label>
+            <input
+              type="number"
+              placeholder="Max"
+              value={filters.maxSize}
+              onChange={(e) => handleFilterChange('maxSize', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              min="0"
+            />
+          </div>
+
+          {/* Stage Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Stage
+            </label>
+            <select
+              value={filters.stage}
+              onChange={(e) => handleFilterChange('stage', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">All Stages</option>
+              <option value="planted">Planted</option>
+              <option value="growing">Growing</option>
+              <option value="ready">Ready</option>
+              <option value="harvested">Harvested</option>
+            </select>
+          </div>
+
+          {/* Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
+            <select
+              value={filters.status}
+              onChange={(e) => handleFilterChange('status', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">All Status</option>
+              <option value="active">Active</option>
+              <option value="at_risk">At Risk</option>
+              <option value="completed">Completed</option>
+            </select>
           </div>
         </div>
       </div>

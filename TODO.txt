@@ -8,9 +8,9 @@ improve the status calculator
 
 add code documentation.
 
-paginate fields table
+paginate fields table [DONE]
 
-add filter by: agentName, location, size
+add filter by: agentName[this filter should be for admin only], location, size, stage, status
 
 
 ******************************************************************************************
