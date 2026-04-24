@@ -42,17 +42,19 @@ export function RegisterPage() {
     try {
       const response = await authService.register(data.username, data.email, data.password);
       
-      // If registration returns token and user, auto-login
-      if (response.data?.token && response.data?.user) {
-        login(response.data.token, response.data.user);
+      // Response should have token and user properties
+      if (response?.token && response?.user) {
+        login(response.token, response.user);
         toast.success('Registration successful! Logging you in...');
         navigate('/dashboard');
       } else {
-        // Otherwise redirect to login
+        // If registration doesn't auto-login, redirect to login
         toast.success('Registration successful! Please log in.');
         navigate('/login');
       }
     } catch (error) {
+      console.error('Registration error:', error);
+      console.error('Error response data:', error.response?.data);
       const message = error.response?.data?.message || 'Registration failed. Please try again.';
       toast.error(message);
       setError('email', { message });

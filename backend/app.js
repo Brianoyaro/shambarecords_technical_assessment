@@ -4,6 +4,8 @@ const rateLimit = require('express-rate-limit');
 // load environment variables from .env file
 require('dotenv').config();
 
+const errorHandler = require('./middleware/errorHandler');
+
 
 const app = express();
 
@@ -48,5 +50,7 @@ app.use('/api/admin', userManagementRoutes);
 const fieldRoutes = require('./routes/field');
 app.use('/api/fields', fieldRoutes);
 
+// Global error handler middleware
+app.use(errorHandler);
 
 module.exports = app;

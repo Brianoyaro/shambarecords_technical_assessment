@@ -26,10 +26,16 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Only handle 401 if user has a token (meaning they're supposedly authenticated)
+    // Don't intercept 401s on login/register attempts (user has no token yet)
     if (error.response?.status === 401) {
-      // Clear auth state and redirect to login
-      useAuthStore.getState().logout();
-      window.location.href = '/login';
+      const token = useAuthStore.getState().token;
+      if (token) {
+        // Token exists but got 401 - token is invalid/expired, logout and redirect
+        useAuthStore.getState().logout();
+        window.location.href = '/login';
+      }
+      // If no token, let the error propagate (likely a login attempt with wrong credentials)
     }
     return Promise.reject(error);
   }

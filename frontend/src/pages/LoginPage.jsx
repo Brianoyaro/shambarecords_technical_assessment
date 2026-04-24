@@ -34,11 +34,13 @@ export function LoginPage() {
   const onSubmit = async (data) => {
     try {
       const response = await authService.login(data.email, data.password);
-      const { token, user } = response.data;
+      const { token, user } = response;
       login(token, user);
       toast.success('Login successful!');
       navigate('/dashboard');
     } catch (error) {
+      console.error('Login error:', error);
+      console.error('Error response data:', error.response?.data);
       const message = error.response?.data?.message || 'Login failed. Please try again.';
       toast.error(message);
       setError('email', { message });
