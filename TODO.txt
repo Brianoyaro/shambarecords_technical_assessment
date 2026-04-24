@@ -4,7 +4,7 @@ improve mobile responsiveness [DONE]
 
 Add these columns to field [location, size] in the backend and also in the frontend where data is rendered.[DONE]
 
-improve the status calculator
+improve the status calculator [DONE]
 
 add code documentation.
 

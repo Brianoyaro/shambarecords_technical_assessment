@@ -60,30 +60,32 @@ export function FieldUpdatePage() {
   }
 
   return (
-    <div>
-      <button
-        onClick={() => navigate(`/fields/${fieldId}`)}
-        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold mb-6"
-      >
-        <FiArrowLeft className="w-4 h-4" />
-        Back to Field Details
-      </button>
+    <div className="flex flex-col items-center justify-center min-h-full">
+      <div className="w-full max-w-3xl px-4 sm:px-0">
+        <button
+          onClick={() => navigate(`/fields/${fieldId}`)}
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold mb-6"
+        >
+          <FiArrowLeft className="w-4 h-4" />
+          Back to Field Details
+        </button>
 
-      <div className="bg-white rounded-lg shadow p-8 max-w-2xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Add Update for {field.field.name}</h1>
-          <p className="text-gray-600">Crop Type: {field.field.cropType}</p>
-          <p className="text-gray-600">Current Stage: <span className="font-semibold">{field.field.currentStage}</span></p>
-        </div>
-
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-            <FiAlertCircle className="w-5 h-5 text-red-600" />
-            <p className="text-red-800">{error}</p>
+        <div className="bg-white rounded-lg shadow p-6 sm:p-8">
+          <div className="mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Add Update for {field.field.name}</h1>
+            <p className="text-gray-600 text-sm sm:text-base">Crop Type: {field.field.cropType}</p>
+            <p className="text-gray-600 text-sm sm:text-base">Current Stage: <span className="font-semibold">{field.field.currentStage}</span></p>
           </div>
-        )}
 
-        <FieldUpdateForm fieldId={fieldId} onSuccess={handleUpdateSuccess} />
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+              <FiAlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <p className="text-red-800">{error}</p>
+            </div>
+          )}
+
+          <FieldUpdateForm fieldId={fieldId} onSuccess={handleUpdateSuccess} />
+        </div>
       </div>
     </div>
   );

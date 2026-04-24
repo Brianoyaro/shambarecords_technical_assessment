@@ -128,32 +128,33 @@ export function EditFieldUpdatePage() {
   }
 
   return (
-    <div>
-      <button
-        onClick={() => navigate(`/fields/${fieldId}`)}
-        className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold mb-6"
-      >
-        <FiArrowLeft className="w-4 h-4" />
-        Back to Field Details
-      </button>
+    <div className="flex flex-col items-center justify-center min-h-full">
+      <div className="w-full max-w-3xl px-4 sm:px-0">
+        <button
+          onClick={() => navigate(`/fields/${fieldId}`)}
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold mb-6"
+        >
+          <FiArrowLeft className="w-4 h-4" />
+          Back to Field Details
+        </button>
 
-      <div className="bg-white rounded-lg shadow p-8 max-w-2xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Update for {field.field.name}</h1>
-          <p className="text-gray-600">Crop Type: {field.field.cropType}</p>
-          <p className="text-gray-600">Updated by: <span className="font-semibold">{update.agent?.username}</span></p>
-          <p className="text-gray-600">Created at: {new Date(update.createdAt).toLocaleString()}</p>
-        </div>
+        <div className="bg-white rounded-lg shadow p-6 sm:p-8">
+          <div className="mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Edit Update for {field.field.name}</h1>
+            <p className="text-gray-600 text-sm sm:text-base">Crop Type: {field.field.cropType}</p>
+            <p className="text-gray-600 text-sm sm:text-base">Updated by: <span className="font-semibold">{update.agent?.username}</span></p>
+            <p className="text-gray-600 text-sm sm:text-base">Created at: {new Date(update.createdAt).toLocaleString()}</p>
+          </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label htmlFor="fieldStage" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="fieldStage" className="block text-base font-medium text-gray-700 mb-2">
               Field Stage *
             </label>
             <select
               id="fieldStage"
               {...register('fieldStage')}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
             >
               <option value="">Select a stage</option>
               <option value="planted">Planted</option>
@@ -162,41 +163,42 @@ export function EditFieldUpdatePage() {
               <option value="harvested">Harvested</option>
             </select>
             {errors.fieldStage && (
-              <p className="mt-1 text-sm text-red-600">{errors.fieldStage.message}</p>
+              <p className="mt-2 text-sm text-red-600">{errors.fieldStage.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="notes" className="block text-base font-medium text-gray-700 mb-2">
               Notes
             </label>
             <textarea
               id="notes"
               {...register('notes')}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              rows="4"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+              rows="6"
               placeholder="Add any notes or observations about the field..."
             />
-            {errors.notes && <p className="mt-1 text-sm text-red-600">{errors.notes.message}</p>}
+            {errors.notes && <p className="mt-2 text-sm text-red-600">{errors.notes.message}</p>}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-4 pt-4">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 text-base"
             >
               {isSubmitting ? 'Saving...' : 'Save Update'}
             </button>
             <button
               type="button"
               onClick={() => navigate(`/fields/${fieldId}`)}
-              className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-200"
+              className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-lg transition duration-200 text-base"
             >
               Cancel
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

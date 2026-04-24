@@ -49,15 +49,15 @@ export function FieldUpdateForm({ fieldId, onSuccess }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
-        <label htmlFor="fieldStage" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="fieldStage" className="block text-base font-medium text-gray-700 mb-2">
           Field Stage *
         </label>
         <select
           id="fieldStage"
           {...register('fieldStage')}
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
         >
           <option value="">Select a stage</option>
           <option value="planted">Planted</option>
@@ -66,28 +66,28 @@ export function FieldUpdateForm({ fieldId, onSuccess }) {
           <option value="harvested">Harvested</option>
         </select>
         {errors.fieldStage && (
-          <p className="mt-1 text-sm text-red-600">{errors.fieldStage.message}</p>
+          <p className="mt-2 text-sm text-red-600">{errors.fieldStage.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="notes" className="block text-base font-medium text-gray-700 mb-2">
           Notes
         </label>
         <textarea
           id="notes"
           {...register('notes')}
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          rows="4"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+          rows="6"
           placeholder="Add any notes or observations about the field..."
         />
-        {errors.notes && <p className="mt-1 text-sm text-red-600">{errors.notes.message}</p>}
+        {errors.notes && <p className="mt-2 text-sm text-red-600">{errors.notes.message}</p>}
       </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 text-base"
       >
         {isSubmitting ? 'Adding Update...' : 'Add Update'}
       </button>
