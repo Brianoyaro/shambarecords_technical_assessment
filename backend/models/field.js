@@ -17,6 +17,15 @@ const Field = sequelize.define('Field', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    location: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    size: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        comment: 'Field size in acres',
+    },
     plantingDate: {
         type: DataTypes.DATE,
         allowNull: false,

@@ -5,9 +5,9 @@ const  UserEnum  = require('../enums/userEnum');
 class FieldController {
     async createField(req, res, next) {
         try {
-            // name, plantingDate, cropType, assignedAgentId
-            const { name, plantingDate, cropType, assignedAgentId } = req.body;
-            const response = await fieldService.createField(name, plantingDate, cropType, assignedAgentId);
+            // name, plantingDate, cropType, location, size, assignedAgentId
+            const { name, plantingDate, cropType, location, size, assignedAgentId } = req.body;
+            const response = await fieldService.createField(name, plantingDate, cropType, location, size, assignedAgentId);
             // status should be calculated separately based on plantingDate and current date, not provided by client
             res.status(201).json({
                 message: 'Field created successfully',

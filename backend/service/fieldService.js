@@ -4,9 +4,9 @@ const UserEnum = require('../enums/userEnum');
 const fieldStatusCalculator = require('./fieldStatusCalculator');
 
 class FieldService {
-    async createField(name, plantingDate, cropType, assignedAgentId) {
+    async createField(name, plantingDate, cropType, location, size, assignedAgentId) {
         // Validate input data
-        if (!name || !plantingDate || !cropType) {
+        if (!name || !plantingDate || !cropType || !location || !size) {
             throw new AppError('Missing required field data', 400);
         }
 
@@ -14,6 +14,8 @@ class FieldService {
             name,
             plantingDate,
             cropType,
+            location,
+            size,
             assignedAgentId
         });
 

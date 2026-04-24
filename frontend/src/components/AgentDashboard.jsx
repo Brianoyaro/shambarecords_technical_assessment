@@ -117,6 +117,12 @@ export function AgentDashboard() {
                 Crop Type
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                Location
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                Size (acres)
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
                 Planting Date
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
@@ -133,7 +139,7 @@ export function AgentDashboard() {
           <tbody className="divide-y divide-gray-200">
             {fields.length === 0 ? (
               <tr>
-                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                <td colSpan="9" className="px-6 py-4 text-center text-gray-500">
                   No fields assigned to you yet
                 </td>
               </tr>
@@ -143,6 +149,8 @@ export function AgentDashboard() {
                   <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.id}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.name}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.cropType}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.location}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.size}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">
                     {new Date(fieldData.field.plantingDate).toLocaleDateString()}
                   </td>

@@ -107,6 +107,16 @@ export function FieldDetailsPage() {
           </div>
 
           <div>
+            <p className="text-gray-600 text-sm font-medium mb-1">Location</p>
+            <p className="text-lg font-semibold text-gray-900">{field.field.location}</p>
+          </div>
+
+          <div>
+            <p className="text-gray-600 text-sm font-medium mb-1">Size (acres)</p>
+            <p className="text-lg font-semibold text-gray-900">{field.field.size}</p>
+          </div>
+
+          <div>
             <p className="text-gray-600 text-sm font-medium mb-1">Planting Date</p>
             <p className="text-lg font-semibold text-gray-900">
               {new Date(field.field.plantingDate).toLocaleDateString()}
