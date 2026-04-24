@@ -10,7 +10,7 @@ add code documentation.
 
 paginate fields table [DONE]
 
-add filter by: agentName[this filter should be for admin only], location, size, stage, status
+add filter by: agentName[this filter should be for admin only], location, size, stage, status[DONE]
 
 
 ******************************************************************************************
