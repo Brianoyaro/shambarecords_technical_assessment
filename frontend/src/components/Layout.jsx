@@ -49,15 +49,6 @@ export function Layout({ children }) {
               <FiHome className="w-5 h-5" />
               Dashboard
             </button>
-            {user?.role === 'user' && (
-              <button
-                onClick={() => navigate('/my-fields')}
-                className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-100 rounded text-gray-700"
-              >
-                <FiList className="w-5 h-5" />
-                My Fields
-              </button>
-            )}
             {user?.role === 'admin' && (
               <button
                 onClick={() => navigate('/users')}

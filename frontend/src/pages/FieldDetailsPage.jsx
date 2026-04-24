@@ -82,11 +82,11 @@ export function FieldDetailsPage() {
   return (
     <div>
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/dashboard')}
         className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold mb-6"
       >
         <FiArrowLeft className="w-4 h-4" />
-        Back
+        Back to Dashboard
       </button>
 
       {error && (
