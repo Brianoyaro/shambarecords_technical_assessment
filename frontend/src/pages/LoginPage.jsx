@@ -48,55 +48,55 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 text-center">Shamba Records</h1>
-          <p className="text-center text-gray-600 mt-2">Field Management System</p>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4 py-6 sm:px-0">
+      <div className="w-full max-w-md p-6 sm:p-8 bg-white rounded-lg shadow-lg">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">Shamba Records</h1>
+          <p className="text-center text-gray-600 mt-2 text-sm sm:text-base">Field Management System</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700">
               Email
             </label>
             <input
               id="email"
               {...register('email')}
               type="email"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
               placeholder="you@example.com"
             />
-            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+            {errors.email && <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-xs sm:text-sm font-medium text-gray-700">
               Password
             </label>
             <input
               id="password"
               {...register('password')}
               type="password"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
               placeholder="••••••••"
             />
             {errors.password && (
-              <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+              <p className="mt-1 text-xs sm:text-sm text-red-600">{errors.password.message}</p>
             )}
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 sm:py-3 px-4 rounded-md transition duration-200 text-sm sm:text-base"
           >
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 text-xs sm:text-sm">
             Don't have an account?{' '}
             <a href="/register" className="text-blue-600 hover:text-blue-800 font-semibold">
               Register here

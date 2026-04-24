@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fieldService } from '../services/fieldService';
-import { FiHardDrive, FiLoader, FiAlertCircle, FiGrid, FiList, FiX } from 'react-icons/fi';
+import { FiHardDrive, FiLoader, FiAlertCircle, FiGrid, FiList, FiX, FiChevronDown } from 'react-icons/fi';
 
 export function AgentDashboard() {
   const navigate = useNavigate();
@@ -10,11 +10,12 @@ export function AgentDashboard() {
   const [error, setError] = useState(null);
   const [viewType, setViewType] = useState('table'); // 'table' or 'card'
   const [currentPage, setCurrentPage] = useState(1);
-  // const ITEMS_PER_PAGE = 2;
-  const ITEMS_PER_PAGE = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE) || 10; // Default to 10 if not set
+  const [showFilters, setShowFilters] = useState(true); // Show/hide filters on mobile
+  const ITEMS_PER_PAGE = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE) || 10;
   const [filters, setFilters] = useState({
     location: '',
-    size: '',
+    minSize: '',
+    maxSize: '',
     stage: '',
     status: '',
   });
@@ -120,33 +121,33 @@ export function AgentDashboard() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Fields</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Fields</h1>
         {/* View Toggle */}
         <div className="flex items-center bg-gray-100 rounded-lg p-1">
           <button
             onClick={() => handleViewChange('table')}
-            className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
+            className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded transition-colors text-xs sm:text-sm ${
               viewType === 'table'
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
             title="Table view"
           >
-            <FiList className="w-5 h-5" />
-            Table
+            <FiList className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Table</span>
           </button>
           <button
             onClick={() => handleViewChange('card')}
-            className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
+            className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded transition-colors text-xs sm:text-sm ${
               viewType === 'card'
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
             title="Card view"
           >
-            <FiGrid className="w-5 h-5" />
-            Cards
+            <FiGrid className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Cards</span>
           </button>
         </div>
       </div>
@@ -167,49 +168,57 @@ export function AgentDashboard() {
       )}
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium">My Fields</p>
-              <p className="text-3xl font-bold text-gray-900">{fields.length}</p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4 mb-6 sm:mb-8">
+        <div className="bg-white p-3 sm:p-6 rounded-lg shadow">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-gray-600 text-xs sm:text-sm font-medium truncate">My Fields</p>
+              <p className="text-2xl sm:text-3xl font-bold text-gray-900">{fields.length}</p>
             </div>
-            <FiHardDrive className="w-12 h-12 text-blue-600 opacity-20" />
+            <FiHardDrive className="w-8 h-8 sm:w-12 sm:h-12 text-blue-600 opacity-20 flex-shrink-0" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-3 sm:p-6 rounded-lg shadow">
           <div>
-            <p className="text-gray-600 text-sm font-medium">Planted</p>
-            <p className="text-3xl font-bold text-green-600">{statusBreakdown.planted}</p>
+            <p className="text-gray-600 text-xs sm:text-sm font-medium truncate">Planted</p>
+            <p className="text-2xl sm:text-3xl font-bold text-green-600">{statusBreakdown.planted}</p>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-3 sm:p-6 rounded-lg shadow">
           <div>
-            <p className="text-gray-600 text-sm font-medium">Growing</p>
-            <p className="text-3xl font-bold text-yellow-600">{statusBreakdown.growing}</p>
+            <p className="text-gray-600 text-xs sm:text-sm font-medium truncate">Growing</p>
+            <p className="text-2xl sm:text-3xl font-bold text-yellow-600">{statusBreakdown.growing}</p>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-3 sm:p-6 rounded-lg shadow">
           <div>
-            <p className="text-gray-600 text-sm font-medium">Ready</p>
-            <p className="text-3xl font-bold text-orange-600">{statusBreakdown.ready}</p>
+            <p className="text-gray-600 text-xs sm:text-sm font-medium truncate">Ready</p>
+            <p className="text-2xl sm:text-3xl font-bold text-orange-600">{statusBreakdown.ready}</p>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="hidden sm:block bg-white p-3 sm:p-6 rounded-lg shadow">
           <div>
-            <p className="text-gray-600 text-sm font-medium">Harvested</p>
-            <p className="text-3xl font-bold text-purple-600">{statusBreakdown.harvested}</p>
+            <p className="text-gray-600 text-xs sm:text-sm font-medium truncate">Harvested</p>
+            <p className="text-2xl sm:text-3xl font-bold text-purple-600">{statusBreakdown.harvested}</p>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow p-6 mb-8">
-        <div className="flex justify-between items-center mb-4">
+      <div className="bg-white rounded-lg shadow p-3 sm:p-6 mb-6 sm:mb-8">
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex justify-between items-center w-full sm:hidden mb-4"
+        >
+          <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+          <FiChevronDown className={`w-5 h-5 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+        </button>
+
+        <div className="hidden sm:flex sm:justify-between sm:items-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
           {Object.values(filters).some((val) => val !== '') && (
             <button
@@ -221,120 +230,133 @@ export function AgentDashboard() {
             </button>
           )}
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* Location Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Location
-            </label>
-            <input
-              type="text"
-              placeholder="Search location..."
-              value={filters.location}
-              onChange={(e) => handleFilterChange('location', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
 
-          {/* Size Filter - Min */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Min Size (acres)
-            </label>
-            <input
-              type="number"
-              placeholder="Min"
-              value={filters.minSize}
-              onChange={(e) => handleFilterChange('minSize', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              min="0"
-            />
-          </div>
+        {showFilters && (
+          <>
+            <div className="sm:hidden mb-4 flex justify-end">
+              {Object.values(filters).some((val) => val !== '') && (
+                <button
+                  onClick={clearFilters}
+                  className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800 font-medium"
+                >
+                  <FiX className="w-4 h-4" />
+                  Clear Filters
+                </button>
+              )}
+            </div>
 
-          {/* Size Filter - Max */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Max Size (acres)
-            </label>
-            <input
-              type="number"
-              placeholder="Max"
-              value={filters.maxSize}
-              onChange={(e) => handleFilterChange('maxSize', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              min="0"
-            />
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+              {/* Location Filter */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={filters.location}
+                  onChange={(e) => handleFilterChange('location', e.target.value)}
+                  className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                />
+              </div>
 
-          {/* Stage Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Stage
-            </label>
-            <select
-              value={filters.stage}
-              onChange={(e) => handleFilterChange('stage', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">All Stages</option>
-              <option value="planted">Planted</option>
-              <option value="growing">Growing</option>
-              <option value="ready">Ready</option>
-              <option value="harvested">Harvested</option>
-            </select>
-          </div>
+              {/* Size Filter - Min */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Min Size
+                </label>
+                <input
+                  type="number"
+                  placeholder="Min"
+                  value={filters.minSize}
+                  onChange={(e) => handleFilterChange('minSize', e.target.value)}
+                  className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  min="0"
+                />
+              </div>
 
-          {/* Status Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <select
-              value={filters.status}
-              onChange={(e) => handleFilterChange('status', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">All Status</option>
-              <option value="active">Active</option>
-              <option value="at_risk">At Risk</option>
-              <option value="completed">Completed</option>
-            </select>
-          </div>
-        </div>
+              {/* Size Filter - Max */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Max Size
+                </label>
+                <input
+                  type="number"
+                  placeholder="Max"
+                  value={filters.maxSize}
+                  onChange={(e) => handleFilterChange('maxSize', e.target.value)}
+                  className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  min="0"
+                />
+              </div>
+
+              {/* Stage Filter */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Stage
+                </label>
+                <select
+                  value={filters.stage}
+                  onChange={(e) => handleFilterChange('stage', e.target.value)}
+                  className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                >
+                  <option value="">All Stages</option>
+                  <option value="planted">Planted</option>
+                  <option value="growing">Growing</option>
+                  <option value="ready">Ready</option>
+                  <option value="harvested">Harvested</option>
+                </select>
+              </div>
+
+              {/* Status Filter */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Status
+                </label>
+                <select
+                  value={filters.status}
+                  onChange={(e) => handleFilterChange('status', e.target.value)}
+                  className="w-full px-2 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                >
+                  <option value="">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="at_risk">At Risk</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Fields Table or Cards */}
       {viewType === 'table' ? (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-lg shadow overflow-x-auto">
+          <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                <th className="px-2 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Crop Type
+                <th className="hidden sm:table-cell px-2 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  Crop
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                <th className="hidden md:table-cell px-2 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase">
                   Location
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Size (acres)
+                <th className="hidden lg:table-cell px-2 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  Size
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Planting Date
+                <th className="hidden lg:table-cell px-2 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  Plant Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                <th className="px-2 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase">
                   Stage
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                <th className="px-2 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-700 uppercase">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                <th className="px-2 sm:px-6 py-2 sm:py-3 text-center text-xs font-medium text-gray-700 uppercase">
                   Action
                 </th>
               </tr>
@@ -342,24 +364,23 @@ export function AgentDashboard() {
             <tbody className="divide-y divide-gray-200">
               {fields.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan="8" className="px-2 sm:px-6 py-4 text-center text-gray-500 text-sm">
                     No fields assigned to you yet
                   </td>
                 </tr>
               ) : (
                 paginatedFields.map((fieldData) => (
                   <tr key={fieldData.field.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.id}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.cropType}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.location}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.size}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-2 sm:px-6 py-3 text-xs sm:text-sm font-medium text-gray-900 truncate">{fieldData.field.name}</td>
+                    <td className="hidden sm:table-cell px-2 sm:px-6 py-3 text-xs sm:text-sm text-gray-900">{fieldData.field.cropType}</td>
+                    <td className="hidden md:table-cell px-2 sm:px-6 py-3 text-xs sm:text-sm text-gray-900">{fieldData.field.location}</td>
+                    <td className="hidden lg:table-cell px-2 sm:px-6 py-3 text-xs sm:text-sm text-gray-900">{fieldData.field.size}</td>
+                    <td className="hidden lg:table-cell px-2 sm:px-6 py-3 text-xs sm:text-sm text-gray-900">
                       {new Date(fieldData.field.plantingDate).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-2 sm:px-6 py-3 text-xs sm:text-sm">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${
                           fieldData.field.currentStage === 'planted'
                             ? 'bg-green-100 text-green-800'
                             : fieldData.field.currentStage === 'growing'
@@ -372,9 +393,9 @@ export function AgentDashboard() {
                         {fieldData.field.currentStage}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-2 sm:px-6 py-3 text-xs sm:text-sm">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${
                           fieldData.status === 'active'
                             ? 'bg-blue-100 text-blue-800'
                             : fieldData.status === 'at_risk'
@@ -385,12 +406,12 @@ export function AgentDashboard() {
                         {fieldData.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-2 sm:px-6 py-3 text-xs sm:text-sm text-center">
                       <button
                         onClick={() => navigate(`/fields/${fieldData.field.id}`)}
-                        className="text-blue-600 hover:text-blue-800 font-semibold"
+                        className="text-blue-600 hover:text-blue-800 font-semibold text-xs sm:text-sm py-1 px-1.5 sm:px-2 rounded hover:bg-blue-50"
                       >
-                        View & Update
+                        View
                       </button>
                     </td>
                   </tr>
@@ -402,45 +423,45 @@ export function AgentDashboard() {
       ) : (
         <div>
           {fields.length === 0 ? (
-            <div className="bg-white rounded-lg shadow p-12 text-center">
-              <p className="text-gray-500 text-lg">No fields assigned to you yet</p>
+            <div className="bg-white rounded-lg shadow p-8 sm:p-12 text-center">
+              <p className="text-gray-500 text-base sm:text-lg">No fields assigned to you yet</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {paginatedFields.map((fieldData) => (
                 <div
                   key={fieldData.field.id}
                   className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden"
                 >
-                  <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
-                    <h3 className="text-lg font-bold truncate">{fieldData.field.name}</h3>
-                    <p className="text-green-100 text-sm">{fieldData.field.cropType}</p>
+                  <div className="bg-gradient-to-r from-green-500 to-green-600 p-3 sm:p-4 text-white">
+                    <h3 className="text-base sm:text-lg font-bold truncate">{fieldData.field.name}</h3>
+                    <p className="text-green-100 text-xs sm:text-sm truncate">{fieldData.field.cropType}</p>
                   </div>
-                  <div className="p-4 space-y-3">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
                       <div>
                         <p className="text-gray-600 font-medium">Location</p>
-                        <p className="text-gray-900 font-semibold">{fieldData.field.location}</p>
+                        <p className="text-gray-900 font-semibold truncate">{fieldData.field.location}</p>
                       </div>
                       <div>
                         <p className="text-gray-600 font-medium">Size</p>
                         <p className="text-gray-900 font-semibold">{fieldData.field.size} acres</p>
                       </div>
                       <div>
-                        <p className="text-gray-600 font-medium">Planting Date</p>
+                        <p className="text-gray-600 font-medium">Plant Date</p>
                         <p className="text-gray-900 font-semibold">
                           {new Date(fieldData.field.plantingDate).toLocaleDateString()}
                         </p>
                       </div>
                       <div>
-                        <p className="text-gray-600 font-medium">Current Stage</p>
+                        <p className="text-gray-600 font-medium">Stage</p>
                         <p className="text-gray-900 font-semibold">{fieldData.field.currentStage}</p>
                       </div>
                     </div>
 
-                    <div className="flex gap-2 pt-2">
+                    <div className="flex gap-1 sm:gap-2 pt-2">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0 ${
                           fieldData.field.currentStage === 'planted'
                             ? 'bg-green-100 text-green-800'
                             : fieldData.field.currentStage === 'growing'
@@ -453,7 +474,7 @@ export function AgentDashboard() {
                         {fieldData.field.currentStage}
                       </span>
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0 ${
                           fieldData.status === 'active'
                             ? 'bg-blue-100 text-blue-800'
                             : fieldData.status === 'at_risk'
@@ -465,10 +486,10 @@ export function AgentDashboard() {
                       </span>
                     </div>
 
-                    <div className="pt-2 border-t border-gray-200">
+                    <div className="pt-2 space-y-1 sm:space-y-2 border-t border-gray-200">
                       <button
                         onClick={() => navigate(`/fields/${fieldData.field.id}`)}
-                        className="w-full text-blue-600 hover:text-blue-800 font-semibold py-2 rounded hover:bg-blue-50 transition"
+                        className="w-full text-blue-600 hover:text-blue-800 font-semibold py-1.5 sm:py-2 rounded hover:bg-blue-50 transition text-xs sm:text-sm"
                       >
                         View & Update
                       </button>
@@ -483,24 +504,24 @@ export function AgentDashboard() {
 
       {/* Pagination Controls */}
       {fields.length > 0 && totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-8">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-2 mt-6 sm:mt-8 flex-wrap">
           <button
             onClick={() => setCurrentPage(1)}
             disabled={currentPage === 1}
-            className="px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-xs sm:text-sm"
           >
             First
           </button>
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-xs sm:text-sm"
           >
-            Previous
+            Prev
           </button>
 
           {/* Page Numbers */}
-          <div className="flex gap-1">
+          <div className="flex gap-0.5 sm:gap-1 flex-wrap justify-center">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
               // Show page numbers around current page
               const showPage =
@@ -509,21 +530,21 @@ export function AgentDashboard() {
                 (page >= currentPage - 1 && page <= currentPage + 1);
 
               if (!showPage && page === 2) {
-                return <span key="dots-start" className="px-2 py-2 text-gray-500">...</span>;
+                return <span key="dots-start" className="px-1 sm:px-2 py-1.5 sm:py-2 text-gray-500 text-xs sm:text-sm">...</span>;
               }
               if (!showPage && page === totalPages - 1) {
-                return <span key="dots-end" className="px-2 py-2 text-gray-500">...</span>;
+                return <span key="dots-end" className="px-1 sm:px-2 py-1.5 sm:py-2 text-gray-500 text-xs sm:text-sm">...</span>;
               }
 
               return showPage ? (
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`px-3 py-2 rounded border ${
+                  className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded border text-xs sm:text-sm font-medium ${
                     currentPage === page
                       ? 'bg-blue-600 text-white border-blue-600'
                       : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                  } font-medium`}
+                  }`}
                 >
                   {page}
                 </button>
@@ -534,20 +555,20 @@ export function AgentDashboard() {
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-xs sm:text-sm"
           >
             Next
           </button>
           <button
             onClick={() => setCurrentPage(totalPages)}
             disabled={currentPage === totalPages}
-            className="px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-xs sm:text-sm"
           >
             Last
           </button>
 
-          <div className="ml-4 text-gray-600 font-medium">
-            Page {currentPage} of {totalPages}
+          <div className="text-gray-600 font-medium text-xs sm:text-sm">
+            {currentPage}/{totalPages}
           </div>
         </div>
       )}

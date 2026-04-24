@@ -1,6 +1,6 @@
-Find inspiration and remove the sidebar
+Find inspiration and remove the sidebar [DONE]
 
-improve mobile responsiveness
+improve mobile responsiveness [DONE]
 
 Add these columns to field [location, size] in the backend and also in the frontend where data is rendered.[DONE]
 
