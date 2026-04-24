@@ -9,6 +9,10 @@ export function AgentDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [viewType, setViewType] = useState('table'); // 'table' or 'card'
+  const [currentPage, setCurrentPage] = useState(1);
+  // const ITEMS_PER_PAGE = 2;
+  const ITEMS_PER_PAGE = parseInt(import.meta.env.VITE_ITEMS_PER_PAGE) || 10; // Default to 10 if not set
+
 
   useEffect(() => {
     fetchFields();
@@ -35,6 +39,19 @@ export function AgentDashboard() {
     harvested: fields.filter((f) => f.field?.currentStage === 'harvested').length,
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(fields.length / ITEMS_PER_PAGE);
+  const paginatedFields = fields.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  // Reset to page 1 when view changes
+  const handleViewChange = (view) => {
+    setViewType(view);
+    setCurrentPage(1);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -50,7 +67,7 @@ export function AgentDashboard() {
         {/* View Toggle */}
         <div className="flex items-center bg-gray-100 rounded-lg p-1">
           <button
-            onClick={() => setViewType('table')}
+            onClick={() => handleViewChange('table')}
             className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
               viewType === 'table'
                 ? 'bg-white text-blue-600 shadow-sm'
@@ -62,7 +79,7 @@ export function AgentDashboard() {
             Table
           </button>
           <button
-            onClick={() => setViewType('card')}
+            onClick={() => handleViewChange('card')}
             className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
               viewType === 'card'
                 ? 'bg-white text-blue-600 shadow-sm'
@@ -175,7 +192,7 @@ export function AgentDashboard() {
                   </td>
                 </tr>
               ) : (
-                fields.map((fieldData) => (
+                paginatedFields.map((fieldData) => (
                   <tr key={fieldData.field.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.id}</td>
                     <td className="px-6 py-4 text-sm text-gray-900">{fieldData.field.name}</td>
@@ -235,7 +252,7 @@ export function AgentDashboard() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {fields.map((fieldData) => (
+              {paginatedFields.map((fieldData) => (
                 <div
                   key={fieldData.field.id}
                   className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden"
@@ -306,6 +323,77 @@ export function AgentDashboard() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {fields.length > 0 && totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-8">
+          <button
+            onClick={() => setCurrentPage(1)}
+            disabled={currentPage === 1}
+            className="px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          >
+            First
+          </button>
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          >
+            Previous
+          </button>
+
+          {/* Page Numbers */}
+          <div className="flex gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+              // Show page numbers around current page
+              const showPage =
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 1 && page <= currentPage + 1);
+
+              if (!showPage && page === 2) {
+                return <span key="dots-start" className="px-2 py-2 text-gray-500">...</span>;
+              }
+              if (!showPage && page === totalPages - 1) {
+                return <span key="dots-end" className="px-2 py-2 text-gray-500">...</span>;
+              }
+
+              return showPage ? (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-2 rounded border ${
+                    currentPage === page
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  } font-medium`}
+                >
+                  {page}
+                </button>
+              ) : null;
+            })}
+          </div>
+
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          >
+            Next
+          </button>
+          <button
+            onClick={() => setCurrentPage(totalPages)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          >
+            Last
+          </button>
+
+          <div className="ml-4 text-gray-600 font-medium">
+            Page {currentPage} of {totalPages}
+          </div>
         </div>
       )}
     </div>
