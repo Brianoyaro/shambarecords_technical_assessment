@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import toast from 'react-hot-toast';
 import { authService } from '../services/authService';
 import { useAuthStore } from '../stores/authStore';
 
@@ -35,9 +36,11 @@ export function LoginPage() {
       const response = await authService.login(data.email, data.password);
       const { token, user } = response.data;
       login(token, user);
+      toast.success('Login successful!');
       navigate('/dashboard');
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed. Please try again.';
+      toast.error(message);
       setError('email', { message });
     }
   };

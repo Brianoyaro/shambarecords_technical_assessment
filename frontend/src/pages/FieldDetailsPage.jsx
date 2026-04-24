@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { fieldService } from '../services/fieldService';
 import { useAuthStore } from '../stores/authStore';
 import { FiArrowLeft, FiLoader, FiAlertCircle, FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
@@ -71,11 +72,13 @@ export function FieldDetailsPage() {
       console.log('Deleting update:', updateId);
       await fieldService.deleteFieldUpdate(id, updateId);
       console.log('Update deleted successfully');
+      toast.success('Update deleted successfully!');
       // Refresh the updates list
       fetchFieldDetails();
     } catch (err) {
       console.error('Error deleting update:', err);
-      alert(err.response?.data?.message || 'Failed to delete update');
+      const message = err.response?.data?.message || 'Failed to delete update';
+      toast.error(message);
     }
   };
 

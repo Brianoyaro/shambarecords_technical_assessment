@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { fieldService } from '../services/fieldService';
 import { userService } from '../services/userService';
 import { FiHardDrive, FiLoader, FiAlertCircle, FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
@@ -32,9 +33,12 @@ export function AdminDashboard() {
     if (window.confirm('Are you sure you want to delete this field?')) {
       try {
         await fieldService.deleteField(fieldId);
+        toast.success('Field deleted successfully!');
         fetchFields();
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to delete field');
+        const message = err.response?.data?.message || 'Failed to delete field';
+        toast.error(message);
+        setError(message);
       }
     }
   };

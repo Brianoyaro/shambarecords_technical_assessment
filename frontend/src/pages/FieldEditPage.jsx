@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { fieldService } from '../services/fieldService';
 import { userService } from '../services/userService';
 import { FieldForm } from '../components/FieldForm';
@@ -44,9 +45,12 @@ export function FieldEditPage() {
       setIsSubmitting(true);
       setError(null);
       await fieldService.updateField(fieldId, data);
+      toast.success('Field updated successfully!');
       navigate(`/fields/${fieldId}`);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update field');
+      const message = err.response?.data?.message || 'Failed to update field';
+      toast.error(message);
+      setError(message);
       setIsSubmitting(false);
     }
   };

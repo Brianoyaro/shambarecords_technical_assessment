@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { fieldService } from '../services/fieldService';
 import { userService } from '../services/userService';
 import { FieldForm } from '../components/FieldForm';
@@ -38,9 +39,12 @@ export function FieldCreatePage() {
       setIsSubmitting(true);
       setError(null);
       await fieldService.createField(data);
+      toast.success('Field created successfully!');
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create field');
+      const message = err.response?.data?.message || 'Failed to create field';
+      toast.error(message);
+      setError(message);
       setIsSubmitting(false);
     }
   };

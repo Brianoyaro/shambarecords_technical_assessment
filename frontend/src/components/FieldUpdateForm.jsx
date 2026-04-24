@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import toast from 'react-hot-toast';
 import { fieldService } from '../services/fieldService';
 import { FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 
@@ -32,30 +33,23 @@ export function FieldUpdateForm({ fieldId, onSuccess }) {
       console.log('fieldId:', fieldId);
       const response = await fieldService.createFieldUpdate(fieldId, data);
       console.log('createFieldUpdate response:', response);
-      setSuccessMessage('Update added successfully!');
+      toast.success('Update added successfully!');
       reset();
       setTimeout(() => {
         console.log('Calling onSuccess callback');
-        setSuccessMessage('');
         onSuccess();
       }, 1500);
     } catch (error) {
       console.error('Error creating field update:', error);
       console.error('Error response:', error.response?.data);
       const message = error.response?.data?.message || 'Failed to add update';
+      toast.error(message);
       setError('fieldStage', { message });
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {successMessage && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-          <FiCheckCircle className="w-5 h-5 text-green-600" />
-          <p className="text-green-800 text-sm">{successMessage}</p>
-        </div>
-      )}
-
       <div>
         <label htmlFor="fieldStage" className="block text-sm font-medium text-gray-700">
           Field Stage *

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import toast from 'react-hot-toast';
 import { authService } from '../services/authService';
 import { useAuthStore } from '../stores/authStore';
 
@@ -44,13 +45,16 @@ export function RegisterPage() {
       // If registration returns token and user, auto-login
       if (response.data?.token && response.data?.user) {
         login(response.data.token, response.data.user);
+        toast.success('Registration successful! Logging you in...');
         navigate('/dashboard');
       } else {
         // Otherwise redirect to login
-        navigate('/login', { state: { message: 'Registration successful! Please log in.' } });
+        toast.success('Registration successful! Please log in.');
+        navigate('/login');
       }
     } catch (error) {
       const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      toast.error(message);
       setError('email', { message });
     }
   };
